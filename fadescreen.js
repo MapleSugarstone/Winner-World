@@ -19,7 +19,7 @@ class FadeScreen {
         } else {
             this.alpha = Math.max(0, this.alpha - this.fadeSpeed);
         }
-        if (this.alpha == 0) {
+        if (this.alpha < 0) {
             this.removeFromWorld = true;
         }
     }

@@ -122,8 +122,8 @@ class Unit {
             this.hp = 100;
             this.lowDamage = 25;
             this.highDamage = 50;
-            this.lowATKCD = 10;
-            this.highATKCD = 20;
+            this.lowATKCD = 30;
+            this.highATKCD = 40;
             this.dodgeChance = 20;
             this.attackRange = 65;
             this.movementSpeed = 5;
@@ -134,8 +134,8 @@ class Unit {
             this.hp = 150;
             this.lowDamage = 10;
             this.highDamage = 60;
-            this.lowATKCD = 10;
-            this.highATKCD = 20;
+            this.lowATKCD = 20;
+            this.highATKCD = 40;
             this.dodgeChance = 0;
             this.attackRange = 65;
             this.movementSpeed = 2;
@@ -145,8 +145,8 @@ class Unit {
             this.hp = 50;
             this.lowDamage = 10;
             this.highDamage = 60;
-            this.lowATKCD = 5;
-            this.highATKCD = 20;
+            this.lowATKCD = 10;
+            this.highATKCD = 40;
             this.dodgeChance = 50;
             this.attackRange = 40;
             this.movementSpeed = 8;
@@ -183,9 +183,9 @@ class Unit {
                 const distance = Math.sqrt(distX * distX + distY * distY);
 
                 // If distance is very small (close), apply repulsion
-                if (distance < 50) {
+                if (distance < 35) {
                 // Calculate the repulsive force using an inverse-square law (diminishing returns)
-                const force = (50 - distance) / 50;  // Force strength, decreases with distance
+                const force = (35 - distance) / 35;  // Force strength, decreases with distance
 
                 // Normalize the direction of the repulsive force
                 const normX = distX / distance;
@@ -273,18 +273,26 @@ class Unit {
             this.direction = Math.abs((angle * 180*Math.PI)% 360);
             
             // Set the velocity based on the speed and angle using trigonometry
-            this.velocityX = Math.cos(angle) * this.movementSpeed;
-            this.velocityY = Math.sin(angle) * this.movementSpeed;
+            if (distance > this.attackRange) {
+                this.velocityX = Math.cos(angle) * this.movementSpeed;
+                this.velocityY = Math.sin(angle) * this.movementSpeed;
+            }
 
             if (distance < this.attackRange) {
                 if (this.ATKCD < 0) {
-                    console.log("please let me attack");
-                    if (this.attackType == "ranged") {
+                    const DMG = this.ranomdInt(this.lowDamage, this.highDamage);
+                    if (this.ranomdInt(0, 100) > this.currentTarget.dodgeChance) {
+                        if (this.attackType == "ranged") {
 
+                        } else {
+                        
+                           this.currentTarget.hp -= DMG;
+                            console.log(this.currentTarget.hp);
+                        }
                     } else {
-                        this.currentTarget.hp -= this.ranomdInt(this.lowDamage, this.highDamage);
-                        console.log(this.currentTarget.hp);
+                        gameEngine.addEntity(new AttackText(this.x, this.y+10, "MISS", "red"));
                     }
+                    gameEngine.addEntity(new AttackText(this.currentTarget.x, this.currentTarget.y+10, "" + -1*DMG, "black"));
                     this.ATKCD = this.ranomdInt(this.lowATKCD, this.highATKCD);
                 }
             }
