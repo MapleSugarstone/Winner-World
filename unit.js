@@ -125,7 +125,7 @@ class Unit {
             this.lowATKCD = 10;
             this.highATKCD = 20;
             this.dodgeChance = 20;
-            this.attackRange = 15;
+            this.attackRange = 55;
             this.movementSpeed = 5;
             this.attackType = "melee";
 
@@ -137,7 +137,7 @@ class Unit {
             this.lowATKCD = 10;
             this.highATKCD = 20;
             this.dodgeChance = 0;
-            this.attackRange = 15;
+            this.attackRange = 55;
             this.movementSpeed = 2;
             this.attackType = "melee";
 
@@ -148,7 +148,7 @@ class Unit {
             this.lowATKCD = 5;
             this.highATKCD = 20;
             this.dodgeChance = 50;
-            this.attackRange = 15;
+            this.attackRange = 35;
             this.movementSpeed = 8;
             this.attackType = "melee";
 
@@ -237,6 +237,13 @@ class Unit {
 
             // Cleanup targets
             this.enemyTeam = this.enemyTeam.filter(item => item.hp > 0);
+            if (this.enemyTeam.length == 0) {
+                this.currentState = "none"
+                this.paused = true;
+                this.velocityX = 0;
+                this.velocityY = 0;
+                return;
+            }
 
             // Find Target
             let minDistance = 99999;
@@ -271,10 +278,12 @@ class Unit {
 
             if (distance < this.attackRange) {
                 if (this.ATKCD < 0) {
+                    console.log("please let me attack");
                     if (this.attackType == "ranged") {
 
                     } else {
                         this.currentTarget.hp -= this.ranomdInt(this.lowDamage, this.highDamage);
+                        console.log(this.currentTarget.hp);
                     }
                     this.ATKCD = this.ranomdInt(this.lowATKCD, this.highATKCD);
                 }
