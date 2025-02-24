@@ -7,6 +7,7 @@ class Unit {
         this.dy = 0;
         this.velocityY = 0;
         this.velocityX = 0;
+        this.ATKCD = 0;
         this.width = 128;
         this.height = 128;
         this.alpha = 1;
@@ -33,11 +34,20 @@ class Unit {
     }
 
     update() {
-        this.collide();
-        if (!this.paused) {
-            this.determineState();
-            this.action();
+        if (this.hp > 0) {
+            this.collide();
+            if (!this.paused) {
+                this.ATKCD--;
+                this.determineState();
+                this.action();
+            }
+        } else {
+            this.alpha -= 0.05;
+            this.allyTeam = this.allyTeam.filter(item => item !== this);
+            if (this.alpha < 0) {
+                this.removeFromWorld = true;
         }
+    }
 
 
     }
@@ -115,7 +125,7 @@ class Unit {
             this.lowATKCD = 10;
             this.highATKCD = 20;
             this.dodgeChance = 20;
-            this.attackRange = 10;
+            this.attackRange = 15;
             this.movementSpeed = 5;
             this.attackType = "melee";
 
@@ -127,7 +137,7 @@ class Unit {
             this.lowATKCD = 10;
             this.highATKCD = 20;
             this.dodgeChance = 0;
-            this.attackRange = 12;
+            this.attackRange = 15;
             this.movementSpeed = 2;
             this.attackType = "melee";
 
@@ -138,7 +148,7 @@ class Unit {
             this.lowATKCD = 5;
             this.highATKCD = 20;
             this.dodgeChance = 50;
-            this.attackRange = 8;
+            this.attackRange = 15;
             this.movementSpeed = 8;
             this.attackType = "melee";
 
@@ -223,7 +233,12 @@ class Unit {
     }
 
     action() {
-        //if (this.currentState == "searching") {
+        if (this.currentState == "searching") {
+
+            // Cleanup targets
+            this.enemyTeam = this.enemyTeam.filter(item => item.hp > 0);
+
+            // Find Target
             let minDistance = 99999;
             this.enemyTeam.forEach(unit => {
                 if (unit) {
@@ -231,16 +246,15 @@ class Unit {
                     const distY = this.y - unit.y;
                     const distance = Math.sqrt(distX * distX + distY * distY);
     
-                    // If distance is very small (close), apply repulsion
-                    if (distance < 9999) {
+                    
+                    if (distance < minDistance) {
                         minDistance = distance;
                         this.currentTarget = unit;
                     } 
                 }
                 
             })
-            this.currentState = "persuing";
-        //} else if (this.currentState = "persuing") {
+
             const deltaX = this.currentTarget.x - this.x;
             const deltaY = this.currentTarget.y - this.y;
 
@@ -254,12 +268,29 @@ class Unit {
             // Set the velocity based on the speed and angle using trigonometry
             this.velocityX = Math.cos(angle) * this.movementSpeed;
             this.velocityY = Math.sin(angle) * this.movementSpeed;
-        //}
+
+            if (distance < this.attackRange) {
+                if (this.ATKCD < 0) {
+                    if (this.attackType == "ranged") {
+
+                    } else {
+                        this.currentTarget.hp -= this.ranomdInt(this.lowDamage, this.highDamage);
+                    }
+                    this.ATKCD = this.ranomdInt(this.lowATKCD, this.highATKCD);
+                }
+            }
     }
+}
 
     determineState() {
         return;
     }
+
+    ranomdInt(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
 
 
 }
