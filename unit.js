@@ -125,7 +125,7 @@ class Unit {
             this.lowATKCD = 10;
             this.highATKCD = 20;
             this.dodgeChance = 20;
-            this.attackRange = 55;
+            this.attackRange = 65;
             this.movementSpeed = 5;
             this.attackType = "melee";
 
@@ -137,7 +137,7 @@ class Unit {
             this.lowATKCD = 10;
             this.highATKCD = 20;
             this.dodgeChance = 0;
-            this.attackRange = 55;
+            this.attackRange = 65;
             this.movementSpeed = 2;
             this.attackType = "melee";
 
@@ -148,7 +148,7 @@ class Unit {
             this.lowATKCD = 5;
             this.highATKCD = 20;
             this.dodgeChance = 50;
-            this.attackRange = 35;
+            this.attackRange = 40;
             this.movementSpeed = 8;
             this.attackType = "melee";
 
