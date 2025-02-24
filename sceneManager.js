@@ -69,12 +69,12 @@ class SceneManager {
 
     randomizeTeams() {
         for (let i = 0; i < 5; i++) {
-            const tempUnit = new Unit(this.ranomdInt(50, 300), this.ranomdInt(10, 240), this.ranomdInt(1, 3), "red");
+            const tempUnit = new Unit(this.ranomdInt(50, 300), this.ranomdInt(10, 240), this.ranomdInt(1, 4), "red");
             redTeam.push(tempUnit);
             gameEngine.addEntity(tempUnit);
         }
         for (let i = 0; i < 5; i++) {
-            const tempUnit = new Unit(this.ranomdInt(500, 750), this.ranomdInt(10, 240), this.ranomdInt(1, 3), "blue");
+            const tempUnit = new Unit(this.ranomdInt(500, 750), this.ranomdInt(10, 240), this.ranomdInt(1, 4), "blue");
             blueTeam.push(tempUnit);
             gameEngine.addEntity(tempUnit);
         }

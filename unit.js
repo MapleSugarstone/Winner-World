@@ -8,10 +8,12 @@ class Unit {
         this.velocityY = 0;
         this.velocityX = 0;
         this.ATKCD = 0;
+        this.trueDirection = 0;
         this.width = 128;
         this.height = 128;
         this.alpha = 1;
         this.paused = true;
+        this.aiType = "Normal";
         
         if (team == "blue") {
             this.teamC = "b";
@@ -25,6 +27,7 @@ class Unit {
             this.allyTeam = redTeam;
         }
         this.getUnitInfo(job);
+        this.maxHP = this.hp;
         this.currentTarget = null;
         this.currentState = "searching";
         this.animator = new UnitAnimator(this);
@@ -73,19 +76,19 @@ class Unit {
         ctx.translate(centerX, centerY);
         ctx.rotate(animState.rotation * Math.PI/180);
         ctx.scale(animState.scale, animState.scale);
+
+
         
         // Flip sprite if facing left
         if (this.direction > 180) {
             ctx.scale(-1, 1);
+            ctx.translate(this.width, 0);
 
         }
         
         // Move back to top-left for drawing
         //ctx.translate(0, 10);
-        ctx.translate(-this.width/2, -this.height/2);
-
-        
-        
+        ctx.translate(-this.width, -this.height);
 
         ctx.drawImage(
             image,
@@ -94,20 +97,32 @@ class Unit {
             this.width,
             this.height
         );
-        /*
-        ctx.globalAlpha = 1;
-        ctx.font = "50px calibri";
-        ctx.textAlign = "center";
-        ctx.fillStyle = "white";
-        ctx.fillText("Vote which team you think will win!", this.x + this.width/2, this.y + this.height - 50);
-        ctx.font = "40px calibri";
-        ctx.fillText("Score: " + score, this.x + this.width/2, this.y + this.height-10);
         
-        */
         // Restore context state
         ctx.restore();
+        
+        //ctx.translate(centerX, centerY);
+        const hr = this.hp > 0 ? this.hp / this.maxHP : 0;
 
-        // Draw scene-specific HUD elements
+
+        ctx.fillStyle = "black"
+        ctx.beginPath();
+        ctx.roundRect(this.x-16, this.y + 45, 30, 5, 30);
+        ctx.fill();
+
+        ctx.fillStyle = hr > 0.7 ? "green" : hr > 0.4 ? "orange" : "red";
+        ctx.beginPath();
+        ctx.roundRect(this.x-16, this.y + 45, 30 * hr, 5, 30);
+        ctx.fill();
+
+        /*
+        ctx.fillStyle = "black"
+        ctx.beginPath();
+        ctx.roundRect(this.x, this.y, 5, 5, 5);
+        ctx.fill();
+        */
+        //ctx.restore();
+        
 
     }
 
@@ -120,20 +135,20 @@ class Unit {
         if (job == 1) {
             
             this.hp = 100;
-            this.lowDamage = 25;
-            this.highDamage = 50;
+            this.lowDamage = 35;
+            this.highDamage = 45;
             this.lowATKCD = 30;
             this.highATKCD = 40;
-            this.dodgeChance = 20;
+            this.dodgeChance = 25;
             this.attackRange = 65;
             this.movementSpeed = 5;
             this.attackType = "melee";
 
 
         } else if (job == 2) {
-            this.hp = 150;
-            this.lowDamage = 10;
-            this.highDamage = 60;
+            this.hp = 170;
+            this.lowDamage = 20;
+            this.highDamage = 40;
             this.lowATKCD = 20;
             this.highATKCD = 40;
             this.dodgeChance = 0;
@@ -142,7 +157,7 @@ class Unit {
             this.attackType = "melee";
 
         } else if (job == 3) {
-            this.hp = 50;
+            this.hp = 60;
             this.lowDamage = 10;
             this.highDamage = 60;
             this.lowATKCD = 10;
@@ -159,11 +174,16 @@ class Unit {
             this.highDamage = 60;
             this.lowATKCD = 30;
             this.highATKCD = 50;
-            this.dodgeChance = 50;
-            this.attackRange = 50;
+            this.dodgeChance = 10;
+            this.attackRange = 180;
+            this.movementSpeed = 1;
             this.attackType = "ranged";
             this.projectileSpeed = 10;
-            this.projectile = "./Units/Projectile1" + this.teamC + ".png";
+            this.projectileSprite = "./Units/Projectile1" + this.teamC + ".png";
+            this.radius = 32;
+            this.pw = 31;
+            this.ph = 32;
+            this.aiType = "StayAway";
 
 
         }
@@ -185,7 +205,7 @@ class Unit {
                 // If distance is very small (close), apply repulsion
                 if (distance < 35) {
                 // Calculate the repulsive force using an inverse-square law (diminishing returns)
-                const force = (35 - distance) / 35;  // Force strength, decreases with distance
+                const force = (35 - distance) / 15;  // Force strength, decreases with distance
 
                 // Normalize the direction of the repulsive force
                 const normX = distX / distance;
@@ -238,6 +258,7 @@ class Unit {
             // Cleanup targets
             this.enemyTeam = this.enemyTeam.filter(item => item.hp > 0);
             if (this.enemyTeam.length == 0) {
+                
                 this.currentState = "none"
                 this.paused = true;
                 this.velocityX = 0;
@@ -269,35 +290,57 @@ class Unit {
             const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 
             const angle = Math.atan2(deltaY, deltaX); // angle in radians
+            this.trueDirection = angle;
             
-            this.direction = Math.abs((angle * 180*Math.PI)% 360);
+            let angleInDegrees = (angle * 180 / Math.PI) + 90;
+
+            // Ensure the angle is within the 0-360 range
+            if (angleInDegrees < 0) {
+                angleInDegrees += 360;
+            } else if (angleInDegrees >= 360) {
+                angleInDegrees -= 360;
+            }
+            this.direction = angleInDegrees;
             
             // Set the velocity based on the speed and angle using trigonometry
-            if (distance > this.attackRange) {
+            // Don't keep moving if within attack range
+            if (distance > this.attackRange-5) {
                 this.velocityX = Math.cos(angle) * this.movementSpeed;
                 this.velocityY = Math.sin(angle) * this.movementSpeed;
+            } else {
+                this.velocityX /= 1.4;
+                this.velocityY /= 1.4;
             }
 
             if (distance < this.attackRange) {
                 if (this.ATKCD < 0) {
                     const DMG = this.ranomdInt(this.lowDamage, this.highDamage);
-                    if (this.ranomdInt(0, 100) > this.currentTarget.dodgeChance) {
+                    
                         if (this.attackType == "ranged") {
 
+                            let displacement = 0;
+                            if (this.direction > 180) {
+                                displacement = -50;
+                            } else {
+                                displacement = 50;
+                            }
+
+                            gameEngine.addEntity(new Projectile(this.x+displacement, this.y-20, this.projectileSprite, this.radius,
+                                                this.enemyTeam, DMG, this.projectileSpeed, this.currentTarget, this.pw, this.ph));
                         } else {
-                        
-                           this.currentTarget.hp -= DMG;
-                            console.log(this.currentTarget.hp);
+                            if (this.ranomdInt(0, 100) > this.currentTarget.dodgeChance) {
+                                this.currentTarget.hp -= DMG;
+                                gameEngine.addEntity(new AttackText(this.currentTarget.x, this.currentTarget.y+10, "" + -1*DMG, "black"));
+                            } else {
+                                gameEngine.addEntity(new AttackText(this.x, this.y+10, "MISS", "red"));
+                            }
                         }
-                    } else {
-                        gameEngine.addEntity(new AttackText(this.x, this.y+10, "MISS", "red"));
-                    }
-                    gameEngine.addEntity(new AttackText(this.currentTarget.x, this.currentTarget.y+10, "" + -1*DMG, "black"));
                     this.ATKCD = this.ranomdInt(this.lowATKCD, this.highATKCD);
+                    }
                 }
             }
     }
-}
+
 
     determineState() {
         return;

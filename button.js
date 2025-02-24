@@ -15,15 +15,7 @@ class Button {
         this.clicking = false;
         this.scale = 1;
         this.baseY = y;
-        
-        // Animation properties
-        this.hoverScale = 1.05;
-        this.clickScale = 0.95;
-        this.scaleSpeed = 0.1;
-        this.bobAmount = 3;
-        this.bobSpeed = 0.003;
-        
-        // Particle effects
+
     }
 
     update() {
