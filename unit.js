@@ -184,7 +184,7 @@ class Unit {
             this.lowATKCD = 30;
             this.highATKCD = 50;
             this.dodgeChance = 10;
-            this.attackRange = 180;
+            this.attackRange = 195;
             this.movementSpeed = 1;
             this.attackType = "ranged";
             this.projectileSpeed = 10;
