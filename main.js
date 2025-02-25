@@ -1,10 +1,14 @@
 const gameEngine = new GameEngine();
+
+let currentMusic = null;
 let scene = "MainMenu";
 let highscore = 0;
 let score = 0;
 let rounds = 0;
+let mute = false;
 
 const sceneManager = new SceneManager();
+//const soundEngine = new SoundEngine();
 let blueTeam = [];
 let redTeam = [];
 
@@ -31,6 +35,8 @@ ASSET_MANAGER.queueDownload("./UI_Assets/ContinueMore2.png");
 
 ASSET_MANAGER.queueDownload("./UI_Assets/Topbar.png");
 
+ASSET_MANAGER.queueDownload("./UI_Assets/Mute.png");
+ASSET_MANAGER.queueDownload("./UI_Assets/Mute2.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/NoWon.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/BlueWon.png");
 ASSET_MANAGER.queueDownload("./UI_Assets/RedWon.png");
@@ -51,6 +57,9 @@ ASSET_MANAGER.queueDownload("./Units/Unit3b.png");
 ASSET_MANAGER.queueDownload("./Units/Unit4b.png");
 ASSET_MANAGER.queueDownload("./Units/Projectile1b.png");
 
+// Sounds
+ASSET_MANAGER.queueAudioDownload("./Sounds/saladik.mp3");
+
 class GameState {
     constructor() {
         this.inGame = false;
@@ -65,6 +74,10 @@ ASSET_MANAGER.downloadAll(() => {
     const canvas = document.getElementById("gameWorld");
     const ctx = canvas.getContext("2d");
     ctx.imageSmoothingEnabled = false; // Disable image smoothing for pixel art
+    currentMusic = ASSET_MANAGER.getAsset("./Sounds/saladik.mp3");
+    currentMusic.preload = 'auto';
+    currentMusic.volume = 0.2;
+    currentMusic.loop = true;
 
    
     // Add UI elements

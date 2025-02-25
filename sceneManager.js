@@ -30,12 +30,20 @@ class SceneManager {
             if (score > highscore) {
                 highscore = score;
             }
+            
             rounds = 0;
             score = 0;
             this.clearEntities();
             gameEngine.addEntity(new GameObject("./Backgrounds/MainMenu.png", 0, 0, 0, 800, 600, 3));
             gameEngine.addEntity(new Button(300, 430, "./UI_Assets/StartButton1.png", 230, 106, "./UI_Assets/StartButton2.png", () => { 
                 scene = "Fight";
+            }));
+            gameEngine.addEntity(new Button(650, 40, "./UI_Assets/Mute.png", 129, 77, "./UI_Assets/Mute2.png", () => {
+                if (mute) {
+                    currentMusic.volume = 0.2
+                } else {
+                    currentMusic.volume = 0
+                }
             }));
             gameEngine.addEntity(new TextO("Highscore: " + highscore, 400, 200, "calibri", 40, "black", 0, 1, "center"));
             gameEngine.addEntity(new FadeScreen());
@@ -120,6 +128,8 @@ class SceneManager {
                 }
                 scene = "continue?"
 
+            } else if (scene == "LoadedMainMenu") {
+                currentMusic.play();
             }
 
         }

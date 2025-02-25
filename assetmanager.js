@@ -48,6 +48,12 @@ class AssetManager {
         this.audioQueue.forEach(path => {
             const audio = new Audio();
 
+            audio.addEventListener("canplaythrough", () => {
+                console.log("Loaded audio " + path);
+                this.successCount++;
+                if (this.isDone()) callback();
+            });
+
             audio.addEventListener("loadeddata", () => {
                 this.successCount++;
                 if (this.isDone()) callback();
