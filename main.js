@@ -61,6 +61,8 @@ ASSET_MANAGER.queueDownload("./Units/Projectile1b.png");
 // Sounds
 ASSET_MANAGER.queueAudioDownload("./Sounds/saladik.mp3");
 ASSET_MANAGER.queueAudioDownload("./Sounds/drum.wav");
+ASSET_MANAGER.queueAudioDownload("./Sounds/win.wav");
+ASSET_MANAGER.queueAudioDownload("./Sounds/lose.wav");
 
 class GameState {
     constructor() {

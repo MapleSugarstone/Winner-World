@@ -123,15 +123,27 @@ class SceneManager {
                 gameEngine.addEntity(new GameObject("./UI_Assets/" + this.result + ".png", 0, 0, 2, 800, 600, 1));
                 gameEngine.addEntity(new GameObject("./UI_Assets/out" + this.playerOutcome + ".png", 0, 0, 3, 800, 600, 1));
                 if (this.playerOutcome == "Won") {
+                    let effect = ASSET_MANAGER.getAsset("./Sounds/win.wav");
+                    effect.preload = 'auto';
+                    effect.volume = (!mute*0.1);
+                    effect.play();
                     gameEngine.addEntity(new Button(300, 430, "./UI_Assets/Continue.png", 230, 106, "./UI_Assets/Continue2.png", () => { 
                         scene = "Fight";
                         score++;
                     }));
                 } else if (this.playerOutcome == "Lost") {
+                    let effect = ASSET_MANAGER.getAsset("./Sounds/lose.wav");
+                    effect.preload = 'auto';
+                    effect.volume = (!mute*0.1);
+                    effect.play();
                     gameEngine.addEntity(new Button(300, 430, "./UI_Assets/Restart.png", 230, 106, "./UI_Assets/Restart2.png", () => { 
                         scene = "MainMenu";
                     }));
                 } else if (this.playerOutcome == "Draw") {
+                    let effect = ASSET_MANAGER.getAsset("./Sounds/lose.wav");
+                    effect.preload = 'auto';
+                    effect.volume = (!mute*0.1);
+                    effect.play();
                     gameEngine.addEntity(new Button(300, 430, "./UI_Assets/ContinueMore.png", 230, 106, "./UI_Assets/ContinueMore2.png", () => { 
                         scene = "Fight";
                         score++;

@@ -1,6 +1,7 @@
 class Projectile {
 
     constructor(x, y, sprite, radius, enemyTeam, damage, pspeed, target, width, height) {
+        this.hit = ASSET_MANAGER.getAsset("./Sounds/drum.wav");
         this.x = x;
         this.y = y;
         this.enemyTeam = enemyTeam;
@@ -39,6 +40,9 @@ class Projectile {
                 const distance = Math.sqrt(distX * distX + distY * distY);
                 if (distance < this.radius && scene == "loadedDuking") {
                     if (this.ranomdInt(0, 100) > unit.dodgeChance) {
+                    let clonedAudio = this.hit.cloneNode(); // Clone the audio object
+                    clonedAudio.volume = (!mute*0.2);
+                    clonedAudio.play();        
                     unit.hp -= this.damage;
                     unit.damage += this.damage/2;
                     gameEngine.addEntity(new AttackText(unit.x, unit.y+10, "" + -1*this.damage, "black"));
