@@ -1,9 +1,12 @@
 class GameObject {
-    constructor(sprite) {
+    constructor(sprite, x, y, layer, width, height) {
         // Position
-        this.x = 0;
-        this.y = 0;
+        this.x = x;
+        this.y = y;
         this.sprite = sprite;
+        this.layer = layer;
+        this.width = width;
+        this.height = height;
 
         // Animation properties
     }
@@ -30,8 +33,8 @@ class GameObject {
             image,
             this.x,
             this.y,
-            ctx.canvas.width,
-            ctx.canvas.height
+            this.width,
+            this.height
         );
 
         // Restore context state
