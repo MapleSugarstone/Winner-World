@@ -3,8 +3,11 @@ class Unit {
         // Position
         this.x = x;
         this.y = y;
+        this.dmgx = 0;
+        this.dmgy = 0;
         this.dx = 0;
         this.dy = 0;
+        this.damage = 0;
         this.velocityY = 0;
         this.velocityX = 0;
         this.ATKCD = 0;
@@ -31,6 +34,7 @@ class Unit {
         this.currentTarget = null;
         this.currentState = "searching";
         this.animator = new UnitAnimator(this);
+        this.animate = new Animator(ASSET_MANAGER.getAsset(this.sprite), 0, 0, 128, 128, 3, 0.15);
 
 
         // Animation properties
@@ -43,6 +47,7 @@ class Unit {
                 this.ATKCD--;
                 this.determineState();
                 this.action();
+                this.damageS(this.damage);
             }
         } else {
             this.alpha -= 0.05;
@@ -69,8 +74,8 @@ class Unit {
 
          
         // Calculate center point for transformations
-        const centerX = this.x + this.width/2;
-        const centerY = this.y + this.height/2;
+        const centerX = this.x + this.width/2 + this.dmgx;
+        const centerY = this.y + this.height/2 + this.dmgy;
         
         // Apply transformations around center point
         ctx.translate(centerX, centerY);
@@ -90,6 +95,7 @@ class Unit {
         //ctx.translate(0, 10);
         ctx.translate(-this.width, -this.height);
 
+        /*
         ctx.drawImage(
             image,
             0,
@@ -97,6 +103,8 @@ class Unit {
             this.width,
             this.height
         );
+        */
+        this.animate.drawFrame(gameEngine.clockTick, ctx, 0, 0);
         
         // Restore context state
         ctx.restore();
@@ -330,6 +338,7 @@ class Unit {
                         } else {
                             if (this.ranomdInt(0, 100) > this.currentTarget.dodgeChance) {
                                 this.currentTarget.hp -= DMG;
+                                this.currentTarget.damage += DMG/2;
                                 gameEngine.addEntity(new AttackText(this.currentTarget.x, this.currentTarget.y+10, "" + -1*DMG, "black"));
                             } else {
                                 gameEngine.addEntity(new AttackText(this.x, this.y+10, "MISS", "red"));
@@ -350,7 +359,17 @@ class Unit {
         min = Math.ceil(min);
         max = Math.floor(max);
         return Math.floor(Math.random() * (max - min + 1)) + min;
-      }
+    }
+
+    randomFloat(min, max) {
+    return Math.random() * (max - min) + min;
+    }  
+
+    damageS(d) {
+        this.dmgx = this.randomFloat(this.damage*-1, this.damage);
+        this.dmgy = this.randomFloat(this.damage*-1, this.damage);
+        this.damage /=1.4;
+    }
 
 
 }

@@ -179,6 +179,11 @@ class UnitAnimator {
         this.targetY = y;
         this.isAnimating = true;
     }
+    damage(d, x, y) {
+        this.targetX = x;
+        this.targetY = y;
+        this.isAnimating = true;
+    }
 
     getDrawPosition() {
         if (this.isDying) {

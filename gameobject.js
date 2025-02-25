@@ -1,5 +1,5 @@
 class GameObject {
-    constructor(sprite, x, y, layer, width, height) {
+    constructor(sprite, x, y, layer, width, height, totalFrames) {
         // Position
         this.x = x;
         this.y = y;
@@ -9,6 +9,7 @@ class GameObject {
         this.height = height;
 
         // Animation properties
+        this.animate = new Animator(ASSET_MANAGER.getAsset(sprite), 0, 0, width, height, totalFrames, 0.15);
     }
 
     update() {
@@ -27,7 +28,10 @@ class GameObject {
         // Set transparency
         ctx.globalAlpha = this.alpha;
 
+        this.animate.drawFrame(gameEngine.clockTick, ctx, this.x, this.y);
+
         // Draw background image scaled to canvas size
+        /*
         const image = ASSET_MANAGER.getAsset(this.sprite);
         ctx.drawImage(
             image,
@@ -36,6 +40,7 @@ class GameObject {
             this.width,
             this.height
         );
+        */
 
         // Restore context state
         ctx.restore();

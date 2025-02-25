@@ -40,6 +40,7 @@ class Projectile {
                 if (distance < this.radius) {
                     if (this.ranomdInt(0, 100) > unit.dodgeChance) {
                     unit.hp -= this.damage;
+                    unit.damage += this.damage/2;
                     gameEngine.addEntity(new AttackText(unit.x, unit.y+10, "" + -1*this.damage, "black"));
                     } else {
                         gameEngine.addEntity(new AttackText(this.x, this.y+10, "MISS", "red"));

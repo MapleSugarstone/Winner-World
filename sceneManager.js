@@ -33,7 +33,7 @@ class SceneManager {
             rounds = 0;
             score = 0;
             this.clearEntities();
-            gameEngine.addEntity(new GameObject("./Backgrounds/MainMenu.png", 0, 0, 0, 800, 600));
+            gameEngine.addEntity(new GameObject("./Backgrounds/MainMenu.png", 0, 0, 0, 800, 600, 3));
             gameEngine.addEntity(new Button(300, 430, "./UI_Assets/StartButton1.png", 230, 106, "./UI_Assets/StartButton2.png", () => { 
                 scene = "Fight";
             }));
@@ -53,7 +53,7 @@ class SceneManager {
                 this.voting = "blue";
                 scene = "Duking";
             })
-            gameEngine.addEntity(new GameObject("./Backgrounds/BattleBackground.png", 0, 0, 0, 800, 600));
+            gameEngine.addEntity(new GameObject("./Backgrounds/BattleBackground.png", 0, 0, 0, 800, 600, 3));
             gameEngine.addEntity(tempTopBar);
             gameEngine.addEntity(tempBlueButton);
             gameEngine.addEntity(tempRedButton);
@@ -101,8 +101,8 @@ class SceneManager {
             
         } else if (scene === "end") {
             if (this.waitTimer < (gameEngine.timestamp/10000)) {
-                gameEngine.addEntity(new GameObject("./UI_Assets/" + this.result + ".png", 0, 0, 2, 800, 600));
-                gameEngine.addEntity(new GameObject("./UI_Assets/out" + this.playerOutcome + ".png", 0, 0, 3, 800, 600));
+                gameEngine.addEntity(new GameObject("./UI_Assets/" + this.result + ".png", 0, 0, 2, 800, 600, 1));
+                gameEngine.addEntity(new GameObject("./UI_Assets/out" + this.playerOutcome + ".png", 0, 0, 3, 800, 600, 1));
                 if (this.playerOutcome == "Won") {
                     gameEngine.addEntity(new Button(300, 430, "./UI_Assets/Continue.png", 230, 106, "./UI_Assets/Continue2.png", () => { 
                         scene = "Fight";
