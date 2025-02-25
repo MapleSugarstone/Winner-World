@@ -6,6 +6,7 @@ let highscore = 0;
 let score = 0;
 let rounds = 0;
 let mute = false;
+interactionDone = false;
 
 const sceneManager = new SceneManager();
 //const soundEngine = new SoundEngine();
@@ -59,6 +60,7 @@ ASSET_MANAGER.queueDownload("./Units/Projectile1b.png");
 
 // Sounds
 ASSET_MANAGER.queueAudioDownload("./Sounds/saladik.mp3");
+ASSET_MANAGER.queueAudioDownload("./Sounds/drum.wav");
 
 class GameState {
     constructor() {
@@ -70,16 +72,30 @@ class GameState {
 
 const gameState = new GameState();
 
+document.addEventListener('click', function onClick() {
+    if (!interactionDone) {
+        // Only run once when the user clicks
+        currentMusic = ASSET_MANAGER.getAsset("./Sounds/saladik.mp3");
+        currentMusic.preload = 'auto';
+        currentMusic.volume = 0.2;
+        currentMusic.loop = true;
+        
+        // Play the music
+        currentMusic.play();
+
+        // Mark that the user interaction has occurred
+        interactionDone = true;
+
+        // Optionally, if you want the event listener to be removed after the first interaction
+        document.removeEventListener('click', onClick);
+    }
+});
+    
 ASSET_MANAGER.downloadAll(() => {
     const canvas = document.getElementById("gameWorld");
     const ctx = canvas.getContext("2d");
     ctx.imageSmoothingEnabled = false; // Disable image smoothing for pixel art
-    currentMusic = ASSET_MANAGER.getAsset("./Sounds/saladik.mp3");
-    currentMusic.preload = 'auto';
-    currentMusic.volume = 0.2;
-    currentMusic.loop = true;
 
-   
     // Add UI elements
 
 

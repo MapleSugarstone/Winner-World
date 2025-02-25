@@ -37,7 +37,7 @@ class Projectile {
                 const distX = this.x - unit.x;
                 const distY = this.y - unit.y;
                 const distance = Math.sqrt(distX * distX + distY * distY);
-                if (distance < this.radius) {
+                if (distance < this.radius && scene == "loadedDuking") {
                     if (this.ranomdInt(0, 100) > unit.dodgeChance) {
                     unit.hp -= this.damage;
                     unit.damage += this.damage/2;

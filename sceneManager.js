@@ -26,6 +26,15 @@ class SceneManager {
     
 
     update() {
+        if (currentMusic) {
+            if (mute) {
+                currentMusic.volume = 0;
+
+            } else {
+                currentMusic.volume = 0.2;
+
+            }
+        }
         if (scene === "MainMenu") {
             if (score > highscore) {
                 highscore = score;
@@ -40,9 +49,11 @@ class SceneManager {
             }));
             gameEngine.addEntity(new Button(650, 40, "./UI_Assets/Mute.png", 129, 77, "./UI_Assets/Mute2.png", () => {
                 if (mute) {
-                    currentMusic.volume = 0.2
+                    mute = false;
+
                 } else {
-                    currentMusic.volume = 0
+
+                    mute = true;
                 }
             }));
             gameEngine.addEntity(new TextO("Highscore: " + highscore, 400, 200, "calibri", 40, "black", 0, 1, "center"));
@@ -129,7 +140,7 @@ class SceneManager {
                 scene = "continue?"
 
             } else if (scene == "LoadedMainMenu") {
-                currentMusic.play();
+
             }
 
         }

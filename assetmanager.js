@@ -49,7 +49,7 @@ class AssetManager {
             const audio = new Audio();
 
             audio.addEventListener("canplaythrough", () => {
-                console.log("Loaded audio " + path);
+                //console.log("Loaded audio " + path);
                 this.successCount++;
                 if (this.isDone()) callback();
             });

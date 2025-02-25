@@ -1,6 +1,7 @@
 class Unit {
     constructor(x, y, job, team) {
         // Position
+        this.hit = ASSET_MANAGER.getAsset("./Sounds/drum.wav");
         this.x = x;
         this.y = y;
         this.dmgx = 0;
@@ -339,6 +340,9 @@ class Unit {
                             if (this.ranomdInt(0, 100) > this.currentTarget.dodgeChance) {
                                 this.currentTarget.hp -= DMG;
                                 this.currentTarget.damage += DMG/2;
+                                let clonedAudio = this.hit.cloneNode(); // Clone the audio object
+                                clonedAudio.volume = (!mute*0.2);
+                                clonedAudio.play();
                                 gameEngine.addEntity(new AttackText(this.currentTarget.x, this.currentTarget.y+10, "" + -1*DMG, "black"));
                             } else {
                                 gameEngine.addEntity(new AttackText(this.x, this.y+10, "MISS", "red"));
